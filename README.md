@@ -4,7 +4,15 @@ Learning Scala, by implementing a neofetch alternative.
 
 Currently supported: distro and kernel.
 
-Args must be passed as: `-d true -k true`
+## help
+
+`sbt:scalafetch> run -h`
+
+```
+-d  display the distro
+-h  display this help
+-k  display the kernel
+```
 
 ## Current output (from my machine)
 
