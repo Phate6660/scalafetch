@@ -12,9 +12,7 @@ object Functions {
 }
 
 object Main extends App {
-  var distro = ""
-  var help = ""
-  var kernel = ""
+  var distro, help,  kernel = ""
   args.sliding(2, 2).toList.collect {
     case Array("-d", argDist: String) => distro = argDist
     case Array("-h", argHelp: String) => help = argHelp
