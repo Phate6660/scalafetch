@@ -6,7 +6,7 @@ Currently supported: distro and kernel.
 
 ## help
 
-`sbt:scalafetch> run -h`
+`sbt:scalafetch> run -H`
 
 ```
 -d  display the distro
