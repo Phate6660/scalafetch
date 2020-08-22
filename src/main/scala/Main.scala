@@ -36,9 +36,12 @@ object Main extends App {
   }
   if(help == "true") {
     println("""-d  display the distro
+-e  display $EDITOR
 -H  display this help
 -h  display hostname
--k  display the kernel""")
+-k  display the kernel
+-s  display the shell
+-u  display the user""")
     System.exit(0)
   }
   if(distro == "true") {
