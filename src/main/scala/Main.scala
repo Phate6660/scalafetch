@@ -1,17 +1,19 @@
 import scala.io.Source
 
 object Functions {
+  def ReadFile(file: String, message: String) : String = {
+    val contents = Source.fromFile(file).getLines.mkString
+    return message + contents
+  }
   def Distro() : String = {
     val distContents = Source.fromFile("/etc/os-release").getLines.take(1).next().split("=") 
     return "Distro:   " + distContents(1)
   }
   def Hostname() : String = {
-    val hostContents = Source.fromFile("/etc/hostname").getLines.mkString
-    return "Hostname: " + hostContents
+    return ReadFile("/etc/hostname", "Hostname: ")
   }
   def Kernel() : String = {
-    val kernContents = Source.fromFile("/proc/sys/kernel/osrelease").getLines.mkString
-    return "Kernel:   " + kernContents
+    return ReadFile("/proc/sys/kernel/osrelease", "Kernel:   ")
   }
 }
 
