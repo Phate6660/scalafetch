@@ -10,15 +10,17 @@ Currently supported: distro and kernel.
 
 ```
 -d  display the distro
--h  display this help
+-H  display this help
+-h  display hostname
 -k  display the kernel
 ```
 
 ## Current output (from my machine)
 
-`sbt:scalafetch> run -d true -k true`
+`sbt:scalafetch> run -d true -h true -k true`
 
 ```
-Distro: Gentoo
-Kernel: 5.4.48-ck-valley
+Distro:   Gentoo
+Hostname: gentoo
+Kernel:   5.4.48-ck-valley
 ```
