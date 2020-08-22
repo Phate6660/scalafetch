@@ -1,3 +1,4 @@
+import java.nio.file.{Paths, Files}
 import scala.io.Source
 
 object Functions {
@@ -5,9 +6,20 @@ object Functions {
     val contents = Source.fromFile(file).getLines.mkString
     return message + contents
   }
+  def ReadAndSplit(file: String, line: Int, message: String) : String = {
+    val distContents = Source.fromFile(file).getLines.take(line).next().split("=") 
+    return message + distContents(1)
+  }
   def Distro() : String = {
-    val distContents = Source.fromFile("/etc/os-release").getLines.take(1).next().split("=") 
-    return "Distro:   " + distContents(1)
+    if (Files.exists(Paths.get("/bedrock/etc/os-release"))) {
+      return ReadAndSplit("/bedrock/etc/os-release", 1, "Distro:   ")
+    } else if(Files.exists(Paths.get("/etc/os-release"))) {
+      return ReadAndSplit("/etc/os-release", 1, "Distro:   ")
+    } else if(Files.exists(Paths.get("/usr/lib/os-release"))) {
+      return ReadAndSplit("/usr/lib/os-release", 1, "Distro:   ")
+    } else {
+      return "N/A (could not read any os-release files)"
+    }
   }
   def Hostname() : String = {
     return ReadFile("/etc/hostname", "Hostname: ")
