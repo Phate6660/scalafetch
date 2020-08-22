@@ -12,30 +12,27 @@ object Functions {
   }
   def Distro() : String = {
     if (Files.exists(Paths.get("/bedrock/etc/os-release"))) {
-      return ReadAndSplit("/bedrock/etc/os-release", 1, "Distro:   ")
+      return ReadAndSplit("/bedrock/etc/os-release", 1, "Distro:    ")
     } else if(Files.exists(Paths.get("/etc/os-release"))) {
-      return ReadAndSplit("/etc/os-release", 1, "Distro:   ")
+      return ReadAndSplit("/etc/os-release", 1, "Distro:    ")
     } else if(Files.exists(Paths.get("/usr/lib/os-release"))) {
-      return ReadAndSplit("/usr/lib/os-release", 1, "Distro:   ")
+      return ReadAndSplit("/usr/lib/os-release", 1, "Distro:    ")
     } else {
       return "N/A (could not read any os-release files)"
     }
   }
-  def Hostname() : String = {
-    return ReadFile("/etc/hostname", "Hostname: ")
-  }
-  def Kernel() : String = {
-    return ReadFile("/proc/sys/kernel/osrelease", "Kernel:   ")
-  }
 }
 
 object Main extends App {
-  var distro, help, hostname, kernel = ""
+  var distro, editor, help, hostname, kernel, shell, user = ""
   args.sliding(2, 2).toList.collect {
     case Array("-d", argDist: String) => distro = argDist
+    case Array("-e", argEdit: String) => editor = argEdit
     case Array("-H", argHelp: String) => help = argHelp
     case Array("-h", argHost: String) => hostname = argHost
     case Array("-k", argKern: String) => kernel = argKern
+    case Array("-s", argShel: String) => shell = argShel
+    case Array("-u", argUser: String) => user = argUser
   }
   if(help == "true") {
     println("""-d  display the distro
@@ -47,10 +44,19 @@ object Main extends App {
   if(distro == "true") {
     println(Functions.Distro())
   }
+  if(editor == "true") {
+    println("Editor:    " + sys.env("EDITOR"))
+  }
   if(hostname == "true") {
-    println(Functions.Hostname())
+    println(Functions.ReadFile("/etc/hostname", "Hostname:  "))
   }
   if(kernel == "true") {
-    println(Functions.Kernel())
+    println(Functions.ReadFile("/proc/sys/kernel/osrelease", "Kernel:    "))
+  }
+  if(shell == "true") {
+    println("Shell:     " + sys.env("SHELL"))
+  }
+  if(user == "true") {
+    println("User:      " + sys.env("USER"))
   }
 }
