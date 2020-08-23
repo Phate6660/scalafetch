@@ -14,6 +14,7 @@ Currently supported: distro and kernel.
 -H  display this help
 -h  display hostname
 -k  display the kernel
+-m  display currently playing music in mpd
 -s  display the shell
 -U  display the user
 -u  display uptime
@@ -29,6 +30,7 @@ Editor:    /usr/bin/emacsclient
 Hostname:  gentoo
 Kernel:    5.4.48-ck-valley
 Shell:     /bin/bash
-Uptime:    1d 2h 44m
+Uptime:    1d 7h 29m
 User:      valley
+Music:     Mr. Bungle - Mr. Bungle - Quote Unquote
 ```

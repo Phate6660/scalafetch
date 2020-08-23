@@ -1,5 +1,7 @@
 import java.nio.file.{Paths, Files}
 import scala.io.Source
+import scala.language.postfixOps
+import sys.process._
 
 object Functions {
   def ReadFile(file: String, message: String) : String = {
@@ -25,6 +27,13 @@ object Functions {
       return "N/A (could not read any os-release files)"
     }
   }
+  def Music() : String = {
+    val title = "mpc -f %title%" #| "head -n1" !!
+    val album = "mpc -f %album%" #| "head -n1" !!
+    val artist = "mpc -f %artist%" #| "head -n1" !!
+    val string = "Music:     " + artist.trim + " - " + album.trim + " - " + title.trim
+    return string
+  }
   def Duration(rawUptime: Int) : (String, String, String) = {
     val days = if (rawUptime > 86400) {
       val days_pre = rawUptime / 60 / 60 / 24
@@ -46,7 +55,6 @@ object Functions {
     }
     return (days, hours, minutes)
   }
-
   def Uptime() : String = {
     if (Files.exists(Paths.get("/proc/uptime"))) {
       val uptiContents = Source.fromFile("/proc/uptime").getLines.mkString
@@ -60,13 +68,14 @@ object Functions {
 }
 
 object Main extends App {
-  var distro, editor, help, hostname, kernel, shell, uptime, user = ""
+  var distro, editor, help, hostname, kernel, music, shell, uptime, user = ""
   args.sliding(2, 2).toList.collect {
     case Array("-d", argDist: String) => distro = argDist
     case Array("-e", argEdit: String) => editor = argEdit
     case Array("-H", argHelp: String) => help = argHelp
     case Array("-h", argHost: String) => hostname = argHost
     case Array("-k", argKern: String) => kernel = argKern
+    case Array("-m", argMusi: String) => music = argMusi
     case Array("-s", argShel: String) => shell = argShel
     case Array("-U", argUser: String) => user = argUser
     case Array("-u", argUpti: String) => uptime = argUpti
@@ -77,6 +86,7 @@ object Main extends App {
 -H  display this help
 -h  display hostname
 -k  display the kernel
+-m  display currently playing music in mpd
 -s  display the shell
 -U  display the user
 -u  display uptime""")
@@ -102,5 +112,8 @@ object Main extends App {
   }
   if(user == "true") {
     println("User:      " + sys.env("USER"))
+  }
+  if(music == "true") {
+    println(Functions.Music())
   }
 }
