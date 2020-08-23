@@ -27,6 +27,15 @@ object Functions {
       return "N/A (could not read any os-release files)"
     }
   }
+  def GPU() : String = {
+    val output = "lspci" #| "grep -I 'VGA\\|Display\\|3D'" !!
+    val model = output.split(":")(2).trim
+    if (model.startsWith("Advanced Micro Devices, Inc.")) {
+      return "GPU:       " + model.split("\\.")(1).trim.replace("[", "").replace("]", "").replace("\n", "")
+    } else {
+      return "GPU:       " + model.replace("\n", "")
+    }
+  }
   def Music() : String = {
     val title = "mpc -f %title%" #| "head -n1" !!
     val album = "mpc -f %album%" #| "head -n1" !!
@@ -68,10 +77,11 @@ object Functions {
 }
 
 object Main extends App {
-  var distro, editor, help, hostname, kernel, music, shell, uptime, user = ""
+  var distro, editor, gpu, help, hostname, kernel, music, shell, uptime, user = ""
   args.sliding(2, 2).toList.collect {
     case Array("-d", argDist: String) => distro = argDist
     case Array("-e", argEdit: String) => editor = argEdit
+    case Array("-g", argGPU:  String) => gpu = argGPU
     case Array("-H", argHelp: String) => help = argHelp
     case Array("-h", argHost: String) => hostname = argHost
     case Array("-k", argKern: String) => kernel = argKern
@@ -83,6 +93,7 @@ object Main extends App {
   if(help == "true") {
     println("""-d  display the distro
 -e  display $EDITOR
+-g  display gpu model
 -H  display this help
 -h  display hostname
 -k  display the kernel
@@ -97,6 +108,9 @@ object Main extends App {
   }
   if(editor == "true") {
     println("Editor:    " + sys.env("EDITOR"))
+  }
+  if(gpu == "true") {
+    println(Functions.GPU())
   }
   if(hostname == "true") {
     println(Functions.ReadFile("/etc/hostname", "Hostname:  "))
