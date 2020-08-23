@@ -15,12 +15,13 @@ Currently supported: distro and kernel.
 -h  display hostname
 -k  display the kernel
 -s  display the shell
--u  display the user
+-U  display the user
+-u  display uptime
 ```
 
 ## Current output (from my machine)
 
-`sbt:scalafetch> run -d true -e true -h true -k true -s true -u true`
+`sbt:scalafetch> run -d true -e true -h true -k true -s true -U true -u true`
 
 ```
 Distro:    Gentoo
@@ -28,5 +29,6 @@ Editor:    /usr/bin/emacsclient
 Hostname:  gentoo
 Kernel:    5.4.48-ck-valley
 Shell:     /bin/bash
+Uptime:    1d 2h 44m
 User:      valley
 ```

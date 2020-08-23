@@ -3,8 +3,12 @@ import scala.io.Source
 
 object Functions {
   def ReadFile(file: String, message: String) : String = {
-    val contents = Source.fromFile(file).getLines.mkString
-    return message + contents
+    if (Files.exists(Paths.get(file))) {
+      val contents = Source.fromFile(file).getLines.mkString
+      return message + contents
+    } else {
+      return "N/A (could not read " + file + ")"
+    }
   }
   def ReadAndSplit(file: String, line: Int, message: String) : String = {
     val distContents = Source.fromFile(file).getLines.take(line).next().split("=") 
@@ -21,10 +25,42 @@ object Functions {
       return "N/A (could not read any os-release files)"
     }
   }
+  def Duration(rawUptime: Int) : (String, String, String) = {
+    val days = if (rawUptime > 86400) {
+      val days_pre = rawUptime / 60 / 60 / 24
+      days_pre + "d "
+    } else {
+      ""
+    }
+    val hours = if (rawUptime > 3600) {
+      val hours_pre = (rawUptime / 60 / 60) % 24
+      hours_pre + "h "
+    } else {
+      ""
+    }
+    val minutes = if (rawUptime > 60) {
+      val minutes_pre = (rawUptime / 60) % 60
+      minutes_pre + "m"
+    } else {
+      ""
+    }
+    return (days, hours, minutes)
+  }
+
+  def Uptime() : String = {
+    if (Files.exists(Paths.get("/proc/uptime"))) {
+      val uptiContents = Source.fromFile("/proc/uptime").getLines.mkString
+      val rawUptime = uptiContents.split("\\.")(0).toInt
+      val (days, hours, minutes) = Duration(rawUptime)
+      return "Uptime:    " + days + hours + minutes
+    } else {
+      return "N/A (could not read /proc/uptime)"
+    }
+  }
 }
 
 object Main extends App {
-  var distro, editor, help, hostname, kernel, shell, user = ""
+  var distro, editor, help, hostname, kernel, shell, uptime, user = ""
   args.sliding(2, 2).toList.collect {
     case Array("-d", argDist: String) => distro = argDist
     case Array("-e", argEdit: String) => editor = argEdit
@@ -32,7 +68,8 @@ object Main extends App {
     case Array("-h", argHost: String) => hostname = argHost
     case Array("-k", argKern: String) => kernel = argKern
     case Array("-s", argShel: String) => shell = argShel
-    case Array("-u", argUser: String) => user = argUser
+    case Array("-U", argUser: String) => user = argUser
+    case Array("-u", argUpti: String) => uptime = argUpti
   }
   if(help == "true") {
     println("""-d  display the distro
@@ -41,7 +78,8 @@ object Main extends App {
 -h  display hostname
 -k  display the kernel
 -s  display the shell
--u  display the user""")
+-U  display the user
+-u  display uptime""")
     System.exit(0)
   }
   if(distro == "true") {
@@ -58,6 +96,9 @@ object Main extends App {
   }
   if(shell == "true") {
     println("Shell:     " + sys.env("SHELL"))
+  }
+  if(uptime == "true") {
+    println(Functions.Uptime())
   }
   if(user == "true") {
     println("User:      " + sys.env("USER"))
