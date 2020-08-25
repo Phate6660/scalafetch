@@ -2,8 +2,6 @@
 
 Learning Scala, by implementing a neofetch alternative.
 
-Currently supported: distro and kernel.
-
 ## help
 
 `sbt:scalafetch> run -H`
