@@ -27,7 +27,6 @@ version := "1.0"
 // and fetch when it starts up.
 // Now, in any Scala file, you can import classes, objects, etc., from cats with
 // a regular import.
-
 // TIP: To find the "dependency" that you need to add to the
 // `libraryDependencies` set, which in the above example looks like this:
 

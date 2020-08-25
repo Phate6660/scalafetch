@@ -9,6 +9,7 @@ Currently supported: distro and kernel.
 `sbt:scalafetch> run -H`
 
 ```
+-c  display cpu
 -d  display the distro
 -e  display $EDITOR
 -g  display gpu model
@@ -23,16 +24,17 @@ Currently supported: distro and kernel.
 
 ## Current output (from my machine)
 
-`sbt:scalafetch> run -d true -e true -g true -h true -k true -m true -s true -U true -u true`
+`sbt:scalafetch> run -c true -d true -e true -g true -h true -k true -m true -s true -U true -u true`
 
 ```
+CPU:       Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz
 Distro:    Gentoo
 Editor:    /usr/bin/emacsclient
-GPU:       AMD/ATI Cedar Radeon HD 5000/6000/7350/8350 Series
+GPU:       AMD/ATI Oland Radeon HD 8570 / R7 240/340 OEM (rev 87)
 Hostname:  gentoo
-Kernel:    5.4.48-ck-valley
+Kernel:    5.4.52
 Shell:     /bin/bash
-Uptime:    1d 10h 45m
+Uptime:    6h 2m
 User:      valley
-Music:     Mr. Bungle - Mr. Bungle - Carousel
+Music:     Primus - Sailing the Seas of Cheese - Here Come the Bastards
 ```

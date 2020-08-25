@@ -1,11 +1,19 @@
-import java.nio.file.{Paths, Files}
+import java.nio.file.{Files, Paths}
 import scala.io.Source
 import scala.language.postfixOps
 import sys.process._
 
 object Functions {
+  def CPU() : String = {
+    if(Files.exists(Paths.get("/proc/cpuinfo"))) {
+      val contents = Source.fromFile("/proc/cpuinfo").getLines.mkString.split(":")(5).trim().replace("stepping", "")
+      return "CPU:       " + contents
+    } else {
+      return "N/A (could not read /proc/cpuinfo)"
+    }
+  }
   def ReadFile(file: String, message: String) : String = {
-    if (Files.exists(Paths.get(file))) {
+    if(Files.exists(Paths.get(file))) {
       val contents = Source.fromFile(file).getLines.mkString
       return message + contents
     } else {
@@ -30,7 +38,7 @@ object Functions {
   def GPU() : String = {
     val output = "lspci" #| "grep -I 'VGA\\|Display\\|3D'" !!
     val model = output.split(":")(2).trim
-    if (model.startsWith("Advanced Micro Devices, Inc.")) {
+    if(model.startsWith("Advanced Micro Devices, Inc.")) {
       return "GPU:       " + model.split("\\.")(1).trim.replace("[", "").replace("]", "").replace("\n", "")
     } else {
       return "GPU:       " + model.replace("\n", "")
@@ -65,7 +73,7 @@ object Functions {
     return (days, hours, minutes)
   }
   def Uptime() : String = {
-    if (Files.exists(Paths.get("/proc/uptime"))) {
+    if(Files.exists(Paths.get("/proc/uptime"))) {
       val uptiContents = Source.fromFile("/proc/uptime").getLines.mkString
       val rawUptime = uptiContents.split("\\.")(0).toInt
       val (days, hours, minutes) = Duration(rawUptime)
@@ -77,8 +85,9 @@ object Functions {
 }
 
 object Main extends App {
-  var distro, editor, gpu, help, hostname, kernel, music, shell, uptime, user = ""
+  var cpu, distro, editor, gpu, help, hostname, kernel, packages, music, shell, uptime, user = ""
   args.sliding(2, 2).toList.collect {
+    case Array("-c", argCPU:  String) => cpu = argCPU
     case Array("-d", argDist: String) => distro = argDist
     case Array("-e", argEdit: String) => editor = argEdit
     case Array("-g", argGPU:  String) => gpu = argGPU
@@ -91,7 +100,8 @@ object Main extends App {
     case Array("-u", argUpti: String) => uptime = argUpti
   }
   if(help == "true") {
-    println("""-d  display the distro
+    println("""-c  display cpu
+-d  display the distro
 -e  display $EDITOR
 -g  display gpu model
 -H  display this help
@@ -102,6 +112,9 @@ object Main extends App {
 -U  display the user
 -u  display uptime""")
     System.exit(0)
+  }
+  if(cpu == "true") {
+    println(Functions.CPU())
   }
   if(distro == "true") {
     println(Functions.Distro())
